@@ -11,21 +11,23 @@ import useGetImageByID from "../../hooks/useGetImageByID";
 
 const ImageDetailsPage: FC = () => {
   const { id } = useParams();
-  const [img, setImg] = useState<any[]>([]);
+  const [img, setImg] = useState<any | null>(null);
 
   const { mutate: getImageByID } = useGetImageByID();
 
   useEffect(() => {
+    if (!id) return;
+
     getImageByID(id, {
       onSuccess: (data) => {
-        setImg(data.data);
-        console.log(data.data)
+        const image = data.data.rows?.[0];
+        setImg(image ?? null);
       },
       onError: (error) => {
         console.error("Erreur :", error);
       },
     });
-  }, [getImageByID]);
+  }, [getImageByID, id]);
 
   if (!img) return null;
 
@@ -34,14 +36,14 @@ const ImageDetailsPage: FC = () => {
       <HStack w="100%" justify="space-between">
         <HStack fontSize="24px" userSelect="none">
           <Text fontWeight="light" color="gray.500">
-            #{img.id}
+            #{img.ipfs_pin_hash}
           </Text>
-          <Text fontWeight="black">{img.name}</Text>
+          <Text fontWeight="black">{img.metadata?.name ?? "Untitled"}</Text>
         </HStack>
       </HStack>
       <HStack spacing="24px" align="stretch" w="100%">
         <Box transition="0.5s" w="100%">
-          <IMGCard url={img.filename} />
+          <IMGCard url={img.ipfs_pin_hash} />
         </Box>
       </HStack>
     </VStack >

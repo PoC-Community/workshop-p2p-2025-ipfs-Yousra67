@@ -22,14 +22,14 @@ const AvailableImages: FC<any> = ({ images }) => {
       >
         {images.map((image: any) => (
           <Box
-            key={image.id}
+            key={image.ipfs_pin_hash}
             cursor="pointer"
-            onClick={() => navigate(`/images/${image.id}`)}
+            onClick={() => navigate(`/images/${image.ipfs_pin_hash}`)}
             w={`${33}vw`}
             px="24px"
             flexShrink={0}
           >
-            <IMGCard url={image?.filename} />
+            <IMGCard url={image?.ipfs_pin_hash} />
           </Box>
         ))}
       </motion.div>

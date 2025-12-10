@@ -16,8 +16,8 @@ import SingleUploadImage from "../molecules/SingleUploadImage";
 import { colors } from "../theme";
 import { useForm } from "react-hook-form";
 import { RiImageAddFill } from "react-icons/ri";
-import usePostImage from "../hooks/usePostImage";
 import { useNavigate } from "react-router-dom";
+import usePinFileToIPFS from "../hooks/usePinFileToIPFS";
 
 interface MintForm {
   name: string;
@@ -41,15 +41,15 @@ const UploadPage: FC = () => {
 
   const navigate = useNavigate();
 
-  const { mutate: postImage, isPending: isPendingPostImage } =
-    usePostImage();
+  const { mutate: pinImageToIPFS, isPending: isPendingPinImage } =
+    usePinFileToIPFS();
 
   const onSubmit = handleSubmit((data) => {
     if (!data.file) {
       setError("file", { message: "This field is required" });
       return;
     }
-    postImage({ image: data.file, name: data.name }, {
+    pinImageToIPFS({ file: data.file, name: data.name }, {
       onSuccess: (res) => {
         toast({
           colorScheme: "purple",
@@ -59,7 +59,7 @@ const UploadPage: FC = () => {
           duration: 5000,
           isClosable: true,
         });
-        navigate(`/images/${res.data.id}`)
+        navigate(`/images/${res.data.IpfsHash}`);
       },
       onError: (err) => {
         console.log(err)
@@ -128,16 +128,16 @@ const UploadPage: FC = () => {
               </FormControl>
             </VStack>
             <Button
-              type="submit"
-              p="64px"
-              fontWeight="black"
-              fontSize="32px"
-              gap="12px"
-              isLoading={isPendingPostImage}
-            >
-              Upload
-              <Icon as={RiImageAddFill} />
-            </Button>
+      type="submit"
+      p="64px"
+      fontWeight="black"
+      fontSize="32px"
+      gap="12px"
+      isLoading={isPendingPinImage}
+    >
+      Upload
+      <Icon as={RiImageAddFill} />
+    </Button>
           </VStack>
         </chakra.form>
       </Stack>

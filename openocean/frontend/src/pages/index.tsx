@@ -15,7 +15,7 @@ const Home: FC = () => {
   useEffect(() => {
     getImages(undefined, {
       onSuccess: (data) => {
-        setImages(data.data);
+        setImages(data.data.rows ?? []);
       },
       onError: (error) => {
         console.error("Erreur :", error);

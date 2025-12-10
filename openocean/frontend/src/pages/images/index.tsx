@@ -14,7 +14,7 @@ const ImageCard: FC<{ img: any }> = ({ img }) => {
   const navigate = useNavigate();
   return (
     <Card
-      onClick={() => navigate(`/images/${img.id}`)}
+      onClick={() => navigate(`/images/${img.ipfs_pin_hash}`)}
       cursor="pointer"
       role="group"
       gap="12px"
@@ -24,7 +24,7 @@ const ImageCard: FC<{ img: any }> = ({ img }) => {
         {img.metadata?.name}
       </Text>
       <Divider w="50%" mx="auto" />
-      <IMGCard key={img.id} url={img?.filename} />
+      <IMGCard key={img.ipfs_pin_hash} url={img?.ipfs_pin_hash} />
     </Card>
   );
 };
@@ -37,7 +37,7 @@ const ImagePage: FC = () => {
   useEffect(() => {
     getImages(undefined, {
       onSuccess: (data) => {
-        setImages(data.data);
+        setImages(data.data.rows ?? []);
       },
       onError: (error) => {
         console.error("Erreur :", error);
